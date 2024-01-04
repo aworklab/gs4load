@@ -7,7 +7,7 @@
 #' @export
 get_lib = function(){
 
-  pacman::p_load(tidyverse, lubridate, glue, fs, data.table)
+  pacman::p_load(tidyverse, lubridate, glue, fs, data.table,pak)
   pacman::p_load(googlesheets4,dtplyr)
   pacman::p_load(plotly, rjson, jsonlite)
   pacman::p_load(pbapply)

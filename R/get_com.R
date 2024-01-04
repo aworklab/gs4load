@@ -7,6 +7,6 @@
 #' @export
 get_com = function(){
 
-  Sys.getenv("COMPUTERNAME")
+  Sys.info()['nodename']
 
 }

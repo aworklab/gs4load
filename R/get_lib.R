@@ -8,6 +8,9 @@
 get_lib = function(){
 
   pacman::p_load(tidyverse, lubridate, glue, fs, data.table)
-  pacman::p_load(googlesheets4)
-  pacman::p_load(plotly)
+  pacman::p_load(googlesheets4,dtplyr)
+  pacman::p_load(plotly, rjson, jsonlite)
+  pacman::p_load(pbapply)
+  pacman::p_load(rvest,httr)
+
 }

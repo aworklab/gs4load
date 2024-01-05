@@ -7,6 +7,16 @@
 #' @export
 gs_master = function(){
 
+  # getlib 이 없을 경우 설치
+  if(sum(rownames(installed.packages()) == 'getlib') == 0){
+
+    remotes::install_github('aworklab/getlib')
+
+  }
+  # 기본 함수 호출
+  getlib::get_lib()
+
+  # API 설정
   call_api = function() {
 
     path_key_url = 'https://github.com/aworklab/everydayPython/files/13760630/sqlstudy-247501-3e961ff7fbf5.json'

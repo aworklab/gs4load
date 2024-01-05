@@ -7,6 +7,15 @@
 #' @export
 gs_loader = function(sheet_is = 'loader', project_is = 'RRS'){
 
+  # getlib 이 없을 경우 설치
+  if(sum(rownames(installed.packages()) == 'getlib') == 0){
+
+    remotes::install_github('aworklab/getlib')
+
+  }
+  # 기본 함수 호출
+  getlib::get_lib()
+
   # Master Key가 없으므로 gs_master 실행을 요청
   tryCatch(
     {length(ls(code_gs))},

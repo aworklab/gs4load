@@ -14,10 +14,13 @@ gs_master = function(project_is = NULL){
 
   }
   # 기본 함수 호출
-  if(sum((.packages())=='getlib') == 0){
+
+  getlib_exist = sum(ls() == 'getlib')
+
+  if(getlib_exist == 0){
 
     library(getlib)
-    getlib::get_lib()
+    get_lib()
 
   }
 

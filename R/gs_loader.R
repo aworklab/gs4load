@@ -15,10 +15,20 @@ gs_loader = function(sheet_is = 'loader', project_is = 'RRS'){
   }
 
  # 기본 함수 호출
+
+  getlib_exist = sum(ls() == 'getlib')
+
+  if(getlib_exist == 0){
+
+    library(getlib)
+    get_lib()
+
+  }
+
   if(sum((.packages())=='getlib') == 0){
 
     library(getlib)
-    getlib::get_lib()
+    get_lib()
 
   }
 

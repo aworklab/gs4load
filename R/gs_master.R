@@ -14,12 +14,16 @@ gs_master = function(){
 
   }
   # 기본 함수 호출
-  getlib::get_lib()
+  if(sum((.packages()) == 'getlib') == 0){
+
+    getlib::get_lib()
+
+  }
 
   # API 설정
   call_api = function() {
 
-    path_key_url = 'https://github.com/aworklab/everydayPython/files/13760630/sqlstudy-247501-3e961ff7fbf5.json'
+    path_key_url = keyring::key_get('gs4')
     googlesheets4::gs4_auth(path = path_key_url)
 
   }

@@ -16,21 +16,15 @@ gs_loader = function(sheet_is = 'loader', project_is = 'RRS'){
 
  # 기본 함수 호출
 
-  getlib_exist = sum(ls() == 'getlib')
+  tibble_exist = sum((.packages()) == 'tibble')
 
-  if(getlib_exist == 0){
-
-    library(getlib)
-    get_lib()
-
-  }
-
-  if(sum((.packages())=='getlib') == 0){
+  if(tibble_exist == 0){
 
     library(getlib)
     get_lib()
 
   }
+
 
   # Env 확인용 플래그
   code_gs_exist = sum(ls(envir = .GlobalEnv) == 'code_gs')

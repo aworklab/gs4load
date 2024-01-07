@@ -5,7 +5,7 @@
 #' @param infile Path to the input file
 #' @return A matrix of the infile
 #' @export
-gs_master = function(){
+gs_master = function(project_is = NULL){
 
   # getlib 이 없을 경우 설치
   if(sum(rownames(installed.packages()) == 'getlib') == 0){
@@ -14,8 +14,9 @@ gs_master = function(){
 
   }
   # 기본 함수 호출
-  if(sum((.packages()) == 'getlib') == 0){
+  if(sum((.packages())=='getlib') == 0){
 
+    library(getlib)
     getlib::get_lib()
 
   }
@@ -30,7 +31,12 @@ gs_master = function(){
 
   call_api()
 
-  # check env
+  # loader master key value
+
+  gs_sys_master = '1CA-1Z9wPWVEXcxGcSZ9_dUXeii_uj9bQDnCgkuBylPc'
+  loader_master = googlesheets4::read_sheet(gs_sys_master, 'loader')
+
+  # code_gs Env 생성
 
   if(!('code_gs' %in% ls(envir = .GlobalEnv))){
 
@@ -38,10 +44,24 @@ gs_master = function(){
 
   }
 
-  # loader master key value
+  # 체크용 조건 플래그
+  project_exist = sum(!is.null(project_is))
+  code_gs_exist = sum(ls(envir = .GlobalEnv) == 'code_gs')
 
-  gs_sys_master = '1CA-1Z9wPWVEXcxGcSZ9_dUXeii_uj9bQDnCgkuBylPc'
-  loader_master = googlesheets4::read_sheet(gs_sys_master, 'loader')
+  if(project_exist == 1 & code_gs_exist == 1){
+
+    # Project 명이 있고, code_gs가 있을 때, Project 정보를 불러와서 Merge함
+    dplyr::bind_rows(
+      loader_master %>% filter(project_id == project_is),
+      code_gs$loader_master
+    ) %>% unique() -> loader_master
+
+  } else if(project_exist == 1 & code_gs_exist == 0){
+
+    # Project명이 있고, code_gs가 없을 때, 지정한 프로젝트만 사용함
+    loader_master = loader_master %>% filter(project_id == project_is)
+
+  }
 
   assign('loader_master', loader_master, envir = code_gs)
 
@@ -60,6 +80,8 @@ gs_master = function(){
   assign('loader', loader, envir = code_gs)
 
   # Assign Project name
+  key_name = paste0(unique(loader$project_id), collapse = ', ')
 
-  print(sprintf('Loader Key id assiged : %s', paste0(unique(loader$project_id), collapse = ', ')))
+  # print(sprintf('Loader Key id assiged : %s', paste0(unique(loader$project_id), collapse = ', ')))
+  print(cat(crayon::green('√'),'Loader Key id Assigned :',crayon::red(key_name),'\n'))
 }

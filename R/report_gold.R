@@ -94,7 +94,8 @@ report_gold = function(){
                             gold_exclusive == T ~ 1,
                             T ~ 0
                           ), .after = date_end) %>%
-                          mutate(across(dplyr::starts_with('date'),as.integer))-> raw_id
+                          mutate(across(dplyr::starts_with('date'),as.integer)) %>%
+                          mutate(product_id = as.integer(product_id))-> raw_id
 
                         return(raw_id)
 

@@ -4,7 +4,7 @@
 \alias{gs_update}
 \title{Google Sheet4를 사용해서 sheet 정보를 가져옴}
 \usage{
-gs_update(the_sheet = "", info = NULL)
+gs_update(df_is, sheet_is, project_is, is_write = F)
 }
 \arguments{
 \item{infile}{Path to the input file}

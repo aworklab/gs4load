@@ -5,7 +5,17 @@
 #' @param infile Path to the input file
 #' @return A mat
 #' @export
-get_gold_source = function(){
+report_gold = function(){
+
+  # 기본 함수 호출
+
+  tibble_exist = sum((.packages()) == 'tibble')
+
+  if(tibble_exist == 0){
+
+    gs4load::get_lib()
+
+  }
 
   # clipboard 데이터 불러오기
   suppressWarnings(
@@ -52,7 +62,11 @@ get_gold_source = function(){
                               name == 2 ~ 'date_end'
                             )) %>%
                             pivot_wider(names_from = name, values_from = value) %>%
-                            select(-flag)
+                            select(-flag) %>%
+                            mutate(across(c(date_start,date_end),
+                                          ~{
+                                            str_remove_all(.x,'-')
+                                          }))
                         ) -> raw_period
 
                         # 프로덕트 정보
@@ -89,6 +103,11 @@ get_gold_source = function(){
   # 그룹별  처리
 
   temp3 = temp3 %>% select(fit) %>% unnest(fit)
+
+  # Sheet에 업데이트
+  gs_update(temp3, 'report_gold','BS')
+
+  return(temp3)
 
 }
 

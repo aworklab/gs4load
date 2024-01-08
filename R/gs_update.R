@@ -5,8 +5,21 @@
 #' @param infile Path to the input file
 #' @return A matrix of the infile
 #' @export
-gs_update = function(the_sheet = '', info = NULL){
+gs_update = function(df_is, sheet_is, project_is, is_write = F){
 
+  # DataFrame이 없음
+
+  if(is.null(df_is)){
+
+    return(cat(crayon::green('√'),'No DataFrame found :(\n'))
+
+  }
+
+  # Sheet 지정 값이 없음
+  if(is.null(sheet_is) || sheet_is == ''){
+
+    return(cat(crayon::green('√'),'No Sheet Information found :(\n'))
+  }
 
   # 기본 함수 호출
 
@@ -27,44 +40,49 @@ gs_update = function(the_sheet = '', info = NULL){
   }
   call_api()
 
-  # check env
+  # Env 확인용 플래그
+  code_gs_exist = sum(ls(envir = .GlobalEnv) == 'code_gs')
 
-  if(!('code_gs' %in% ls(envir = .GlobalEnv))){
+  # Master Key가 없으므로 gs_master 실행을 요청
+  if(code_gs_exist == 0){
 
-    assign('code_gs', new.env(), envir = .GlobalEnv)
-
-  }
-
-  # check loader
-
-  if(!'loader' %in% ls(code_gs)){
-
-    gs_sys = '1CgrVo4NdeYvrC9Z1dwHJxDifE-bNudVlmaxcg-67hnI'
-    loader = googlesheets4::read_sheet(gs_sys, 'loader', col_types = c('cccc'))
-    assign('loader', loader, envir = code_gs)
+    gs_master(project_is)
 
   }
 
-  # env에 해당 값 있는지 확인
+  # loader에 프로젝트 정보가 없을 경우
+  if(sum(code_gs$loader$project_id == project_is) == 0){
 
-  if(sheet == ''){
-
-    return(print('no sheet'))
-
-  } else if (is.null(info)){
-
-    return(print('nothing to update'))
-
-  } else if (nrow(info) == 0){
-
-    return(print('nrow is 0'))
+    gs_master(project_is)
 
   }
+  # Meta 정보가 없으므로 gs_master 실행을 요청
 
-  t_info = dplyr::filter(code_gs$loader, sheets == the_sheet)
+  # Env Loader에서 필요한 ss 정보 검색
+  loader_wanted = code_gs$loader %>% filter(project_id == project_is & sheets == sheet_is)
 
-  googlesheets4::sheet_append(t_info$ss, info, sheet = the_sheet)
 
-  print(sprintf('appended in %s', t_info$sheets))
+  # 비어 있는 Sheet인지 확인 (비어 있을 경우 append가 아니라 강제 write로 시작)
+  is_empty = googlesheets4::read_sheet(ss=loader_wanted$ss, sheet=sheet_is, range = 'A1:A2')
+  is_empty = nrow(is_empty) == 0
+
+
+  # GoogleSheet에 쓰기 시작
+  if(is_empty == T){ # 비어 있는 Sheet일 경우 강제로 Write
+
+    googlesheets4::sheet_write(data=df_is,ss=loader_wanted$ss,sheet=loader_wanted$sheets)
+    cat(crayon::green('√'),crayon::yellow(project_is),'Sheet',crayon::red(sheet_is),'Written Initially:)\n')
+
+  } else if(is_write == F){ # Append
+
+    googlesheets4::sheet_append(ss=loader_wanted$ss, data=df_is, sheet = loader_wanted$sheets)
+    cat(crayon::green('√'),crayon::yellow(project_is),'Sheet',crayon::red(sheet_is),'Appended :)\n')
+
+  } else { # Write
+
+    googlesheets4::sheet_write(data=df_is,ss=loader_wanted$ss,sheet=loader_wanted$sheets)
+    cat(crayon::green('√'),crayon::yellow(project_is),'Sheet',crayon::red(sheet_is),'Written :)\n')
+
+  }
 
 }

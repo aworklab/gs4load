@@ -65,7 +65,7 @@ report_gold = function(){
                             select(-flag) %>%
                             mutate(across(c(date_start,date_end),
                                           ~{
-                                            str_remove_all(.x,'-') %>% as.integer()
+                                            str_remove_all(.x,'-')
                                           }))
                         ) -> raw_period
 
@@ -81,7 +81,7 @@ report_gold = function(){
                           mutate(product_price = parse_number(b)) %>%
                           select(product_type, product_id = d,
                                  product_name = a, product_price) %>%
-                          mutate(date_report = str_remove_all(range_date[.y], '-') %>% as.integer(),
+                          mutate(date_report = str_remove_all(range_date[.y], '-'),
                                  date_start = raw_period$date_start,
                                  date_end = raw_period$date_end,
                                  .before = product_type
@@ -94,7 +94,8 @@ report_gold = function(){
                           mutate(gold_exclusive = case_when(
                             gold_exclusive == T ~ 1,
                             T ~ 0
-                          ), .after = date_end) -> raw_id
+                          ), .after = date_end) %>%
+                          mutate(across(dplyr::starts_with('date'),as.integer))-> raw_id
 
                         return(raw_id)
 

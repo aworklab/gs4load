@@ -65,7 +65,7 @@ report_gold = function(){
                             select(-flag) %>%
                             mutate(across(c(date_start,date_end),
                                           ~{
-                                            str_remove_all(.x,'-') %>% as.integer()
+                                            str_remove_all(.x,'-')
                                           }))
                         ) -> raw_period
 

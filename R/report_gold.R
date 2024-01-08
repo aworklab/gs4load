@@ -65,7 +65,7 @@ report_gold = function(){
                             select(-flag) %>%
                             mutate(across(c(date_start,date_end),
                                           ~{
-                                            str_remove_all(.x,'-')
+                                            str_remove_all(.x,'-') %>% as.integer()
                                           }))
                         ) -> raw_period
 
@@ -81,7 +81,7 @@ report_gold = function(){
                           mutate(product_price = parse_number(b)) %>%
                           select(product_type, product_id = d,
                                  product_name = a, product_price) %>%
-                          mutate(date_report = str_remove_all(range_date[.y], '-'),
+                          mutate(date_report = str_remove_all(range_date[.y], '-') %>% as.integer(),
                                  date_start = raw_period$date_start,
                                  date_end = raw_period$date_end,
                                  .before = product_type
@@ -105,7 +105,7 @@ report_gold = function(){
   temp3 = temp3 %>% select(fit) %>% unnest(fit)
 
   # Sheet에 업데이트
-  gs_update(temp3, 'report_gold','BS')
+  ##gs_update(temp3, 'report_gold','BS')
 
   return(temp3)
 

@@ -85,7 +85,7 @@ report_gold = function(){
                                  date_start = raw_period$date_start,
                                  date_end = raw_period$date_end,
                                  .before = product_type
-                          ) %>%  -> raw_id
+                          ) -> raw_id
 
                         # 골드 상품만인지 확인
                         gold_exclusive = !sum(raw_id$product_type == 'coin')

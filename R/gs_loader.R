@@ -7,12 +7,6 @@
 #' @export
 gs_loader = function(sheet_is = 'loader', project_is = 'RRS'){
 
-  # getlib 이 없을 경우 설치
-  if(sum(rownames(installed.packages()) == 'getlib') == 0){
-
-    remotes::install_github('aworklab/getlib')
-
-  }
 
  # 기본 함수 호출
 
@@ -20,8 +14,7 @@ gs_loader = function(sheet_is = 'loader', project_is = 'RRS'){
 
   if(tibble_exist == 0){
 
-    library(getlib)
-    get_lib()
+    gs4load::get_lib()
 
   }
 

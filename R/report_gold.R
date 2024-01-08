@@ -90,13 +90,16 @@ report_gold = function(){
                                  date_end = raw_period$date_end,
                                  .before = product_type) -> raw_id
 
-                        # 골드 상품만인지 확인
-                        gold_exclusive = !sum(raw_id$product_type == 'coin')
+
+                        # 골드, 코인 상품 확인
+                        gold_valid = sum(raw_id$product_type == 'gold')
+                        coin_valid = sum(raw_id$product_type == 'coin')
 
                         raw_id %>%
-                          mutate(gold_exclusive = case_when(
-                            gold_exclusive == T ~ 1,
-                            T ~ 0
+                          mutate(exclusive = case_when(
+                            gold_valid != 0 & coin_valid != 0 ~ 'all',
+                            gold_valid != 0 & coin_valid == 0 ~ 'gold',
+                            gold_valid == 0 & coin_valid != 0 ~ 'coin'
                           ), .after = date_end) %>%
                           mutate(across(dplyr::starts_with('date'),as.integer)) %>%
                           mutate(product_id = as.integer(product_id))-> raw_id

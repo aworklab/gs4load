@@ -105,7 +105,7 @@ report_gold = function(){
   temp3 = temp3 %>% select(fit) %>% unnest(fit)
 
   # Sheet에 업데이트
-  ##gs_update(temp3, 'report_gold','BS')
+  gs_update(temp3, 'report_gold','BS')
 
   return(temp3)
 

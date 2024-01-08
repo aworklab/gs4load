@@ -22,6 +22,8 @@ report_gold = function(){
     tibble(txt = readLines('clipboard'))
   ) %>% mutate(txt = trimws(txt)) -> temp
 
+  cat(crayon::green('√'),crayon::bold('Text'),'is read from clipboard\n')
+
 
   # 데이터 세트 수 확인
 
@@ -32,6 +34,8 @@ report_gold = function(){
 
   n_set = max(temp2$flag) # 데이터 세트 수
   range_date = seq.Date(today() - days(n_set), today() - 1, 'day')
+
+  cat(crayon::green('√'),'Data Set Count :',crayon::red(n_set),'\n')
 
   # 세트별로 정리
 

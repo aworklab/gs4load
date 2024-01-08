@@ -7,10 +7,23 @@
 #' @export
 gs_update = function(the_sheet = '', info = NULL){
 
+
+  # 기본 함수 호출
+
+  tibble_exist = sum((.packages()) == 'tibble')
+
+  if(tibble_exist == 0){
+
+    gs4load::get_lib()
+
+  }
+
+  # API 설정
   call_api = function() {
 
-    path_key = 'D:/study/r/sqlstudy-247501-3e961ff7fbf5.json'
-    googlesheets4::gs4_auth(path = path_key)
+    path_key_url = keyring::key_get('gs4')
+    googlesheets4::gs4_auth(path = path_key_url)
+
   }
   call_api()
 

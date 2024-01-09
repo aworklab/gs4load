@@ -20,6 +20,13 @@ load_project_files = function(){
 
   target_list = list_project |> dplyr::filter(com_name == com_is & project_name == project_is)
 
+  if(nrow(target_list) == 0){
+
+    return(cat(crayon::red('∀'),'There is No project Information\n',
+               crayon::red('∀'),crayon::silver('Task Aborted...\n')))
+
+  }
+
   target_list = target_list |> dplyr::mutate(dir_is = sprintf('%s/%s',dir_name,file)) %>% pull(dir_is)
 
   lapply(target_list, function(x) rstudioapi::navigateToFile(x))

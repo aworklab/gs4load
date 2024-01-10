@@ -61,7 +61,7 @@ dt2str = function(df){
       eval(parse(text = txt))
 
       cat(magenta('>')
-          ,yellow(work_col),'is converted to',blue(work_flag),'\n')
+          ,yellow(work_col),'is converted to',blue('str'),'\n')
 
     } # for 문 종료
 

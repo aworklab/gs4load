@@ -7,9 +7,6 @@
 #' @export
 get_con = function(prefix_is, db_is = 'sql'){
 
-  prefix_is = 'sf_cbt'
-  sql_is = 'sqlite'
-
   # Prefix가 없을 경우 종료
   if(sum(!is.null(prefix_is)) == 0){
     return(cat(green('√'),'No Prefix Information...\n'))
@@ -26,6 +23,7 @@ get_con = function(prefix_is, db_is = 'sql'){
 
   # 컴퓨터 이름 판별
   where_is = Sys.info()['nodename']
+
 
   # 판별 조건 확인
 

@@ -7,12 +7,6 @@
 #' @export
 gs_master = function(project_is = NULL){
 
-  # getlib 이 없을 경우 설치
-  if(sum(rownames(installed.packages()) == 'getlib') == 0){
-
-    remotes::install_github('aworklab/getlib')
-
-  }
   # 기본 함수 호출
 
   tibble_exist = sum((.packages()) == 'tibble')

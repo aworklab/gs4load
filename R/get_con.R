@@ -18,6 +18,11 @@ get_con = function(prefix_is, db_is = 'sql'){
     return(cat(green('√'),'No Valid DB Name...\n'))
   }
 
+  # DB 별 상세
+
+  db_type = tibble(db_is = c('sql','my','ms'),
+         db_type = c('SQLite','MYSQL','MSSQL'))
+
   # GS4 KEY 설정
   path_key = keyring::key_get('gs4')
 
@@ -137,7 +142,10 @@ get_con = function(prefix_is, db_is = 'sql'){
 
   } # Conneciton 확보 종료
 
-  cat(green('√'),'Connection with',silver('DB'),red(prefix_is),'Established !!!\n')
+  db_type = db_type$db_type[which(db_type$db_is == db_is)]
+
+  cat(green('√'),blue(db_type),
+      'Connection with',silver('DB'),red(prefix_is),'Established !!!\n')
 
   return(conn)
 

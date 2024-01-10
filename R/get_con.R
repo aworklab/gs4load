@@ -138,7 +138,19 @@ get_con = function(prefix_is, db_is = 'sql'){
 
   } else if (db_is == 'my'){
 
-    return(cat(green('√'),'MY SQL is',yellow('Under Construction'),'...\n'))
+    # 연결할 DB 네임 설정
+    dbname_is = str_split(db_info$mysql_db[which(db_info$prefix == prefix_is) ], '@')[[1]]
+    schema_is = db_info$t_name[which(db_info$prefix == prefix_is) ]
+
+    conn = DBI::dbConnect(
+      RMySQL::MySQL(),
+      dbname = schema_is,
+      host = dbname_is[1],
+      user = dbname_is[2],
+      password = keyring::key_get(dbname_is[3]),
+      port = 3306
+    ) -> con
+
 
   } # Conneciton 확보 종료
 

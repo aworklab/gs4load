@@ -90,7 +90,7 @@ get_con = function(prefix_is, db_is = 'sql'){
 
     googlesheets4::gs4_auth(path = path_key)
     gs_sys_master = '1CA-1Z9wPWVEXcxGcSZ9_dUXeii_uj9bQDnCgkuBylPc'
-    meta_key = loader_master$key_id[loader_master$project_id == 'META']
+    meta_key = code_gs$loader_master$key_id[code_gs$loader_master$project_id == 'META']
     loader = googlesheets4::read_sheet(meta_key, 'loader')
     assign('loader', loader, envir = code_gs)
 
@@ -100,7 +100,7 @@ get_con = function(prefix_is, db_is = 'sql'){
 
     googlesheets4::gs4_auth(path = path_key)
     gs_sys_master = '1CA-1Z9wPWVEXcxGcSZ9_dUXeii_uj9bQDnCgkuBylPc'
-    sheet_key = loader$ss[loader$sheets == 'gs4test']
+    sheet_key = code_gs$loader$ss[code_gs$loader$sheets == 'gs4test']
     db_set = googlesheets4::read_sheet(sheet_key, 'bs_db') %>% filter(com_is == where_is)
     assign('db_set', db_set, envir = code_gs)
 

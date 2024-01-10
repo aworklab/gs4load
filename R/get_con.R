@@ -63,11 +63,11 @@ get_con = function(prefix_is, db_is = 'sql'){
 
   if(master_exist == 1){
 
-    db_info_exist = ifelse(sum(ls(code_gs) == 'db_info') == 1, 1, 0)
+    db_set_exist = ifelse(sum(ls(code_gs) == 'db_set') == 1, 1, 0)
 
   } else {
 
-    db_info_exist = 0
+    db_set_exist = 0
 
   }
 
@@ -96,17 +96,17 @@ get_con = function(prefix_is, db_is = 'sql'){
 
   }
 
-  if(db_info_exist == 0){
+  if(db_set_exist == 0){
 
     googlesheets4::gs4_auth(path = path_key)
     gs_sys_master = '1CA-1Z9wPWVEXcxGcSZ9_dUXeii_uj9bQDnCgkuBylPc'
     sheet_key = loader$ss[loader$sheets == 'gs4test']
-    db_info = googlesheets4::read_sheet(sheet_key, 'bs_db') %>% filter(com_is == where_is)
-    assign('db_info', db_info, envir = code_gs)
+    db_set = googlesheets4::read_sheet(sheet_key, 'bs_db') %>% filter(com_is == where_is)
+    assign('db_set', db_set, envir = code_gs)
 
   } else {
 
-    db_info = code_gs$db_info
+    db_set = code_gs$db_set
 
   }
 
@@ -115,7 +115,7 @@ get_con = function(prefix_is, db_is = 'sql'){
   if(db_is == 'sql'){ # SQLite
 
     # 연결할 DB 네임 설정
-    dbname_is = db_info$dbname[which(db_info$prefix == prefix_is)]
+    dbname_is = db_set$dbname[which(db_set$prefix == prefix_is)]
 
     # 연결 설정
     conn = DBI::dbConnect(RSQLite::SQLite(), dbname = dbname_is)
@@ -123,7 +123,7 @@ get_con = function(prefix_is, db_is = 'sql'){
   } else if (db_is == 'ms'){ # MSSQL
 
     # 연결할 DB 네임 설정
-    dbname_is = str_split(db_info$mssql_db[which(db_info$prefix == prefix_is) ], '@')[[1]]
+    dbname_is = str_split(db_set$mssql_db[which(db_set$prefix == prefix_is) ], '@')[[1]]
 
     # 연결 설정
 
@@ -139,8 +139,8 @@ get_con = function(prefix_is, db_is = 'sql'){
   } else if (db_is == 'my'){
 
     # 연결할 DB 네임 설정
-    dbname_is = str_split(db_info$mysql_db[which(db_info$prefix == prefix_is) ], '@')[[1]]
-    schema_is = db_info$t_name[which(db_info$prefix == prefix_is) ]
+    dbname_is = str_split(db_set$mysql_db[which(db_set$prefix == prefix_is) ], '@')[[1]]
+    schema_is = db_set$t_name[which(db_set$prefix == prefix_is) ]
 
     conn = DBI::dbConnect(
       RMySQL::MySQL(),

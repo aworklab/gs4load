@@ -140,7 +140,8 @@ get_con = function(prefix_is, db_is = 'sql'){
 
     # 연결할 DB 네임 설정
     dbname_is = str_split(db_set$mysql_db[which(db_set$prefix == prefix_is) ], '@')[[1]]
-    schema_is = db_set$t_name[which(db_set$prefix == prefix_is) ]
+    # schema_is = db_set$t_name[which(db_set$prefix == prefix_is) ]
+    schema_is = prefix_is
 
     conn = DBI::dbConnect(
       RMySQL::MySQL(),

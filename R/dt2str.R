@@ -1,4 +1,4 @@
-#' 기본 함수를 가져 옴
+#' DataFrame에서 Date, TimeStamp 형식을 String으로 변환하는 함수
 #'
 #' 테스트 해볼 것
 #'

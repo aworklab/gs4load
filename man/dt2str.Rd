@@ -2,7 +2,7 @@
 % Please edit documentation in R/dt2str.R
 \name{dt2str}
 \alias{dt2str}
-\title{기본 함수를 가져 옴}
+\title{DataFrame에서 Date, TimeStamp 형식을 String으로 변환하는 함수}
 \usage{
 dt2str(df)
 }

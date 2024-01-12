@@ -149,7 +149,8 @@ get_con = function(prefix_is, db_is = 'sql'){
       host = dbname_is[1],
       user = dbname_is[2],
       password = keyring::key_get(dbname_is[3]),
-      port = 3306
+      port = 3306,
+      local_infile = T
     ) -> con
 
 

@@ -23,20 +23,15 @@ str2dt = function(df){
   tibble(col = names(na_chk), na_cnt = as.integer(na_chk)) %>%
     filter(na_cnt > 0 & na_cnt != idx_cur)-> na_chk
 
-  if(nrow(na_chk) != 0){ # na_chk가 비어 있지 않을 경우
+  for(i in 1:nrow(na_chk)){
 
-    for(i in 1:nrow(na_chk)){
-
-      col_is = na_chk$col[i]
-      txt = glue('chk${col_is} = zoo::na.locf(chk${col_is}, na.rm = F, fromLast=T)')
-      eval(parse(text = txt))
-      txt = glue('chk${col_is} = zoo::na.locf(chk${col_is}, na.rm = F, fromLast=F)')
-      eval(parse(text = txt))
-
-    }
+    col_is = na_chk$col[i]
+    txt = glue('chk${col_is} = zoo::na.locf(chk${col_is}, na.rm = F, fromLast=T)')
+    eval(parse(text = txt))
+    txt = glue('chk${col_is} = zoo::na.locf(chk${col_is}, na.rm = F, fromLast=F)')
+    eval(parse(text = txt))
 
   }
-
 
   # Date, TS를 자동 변환
 
@@ -73,7 +68,7 @@ str2dt = function(df){
 
   } # if문 종료
 
-  str(df)
+
   return(df)
 
 }

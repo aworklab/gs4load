@@ -4,7 +4,7 @@
 \alias{get_mysql_schema}
 \title{기본 함수를 가져 옴}
 \usage{
-get_mysql_schema(df)
+get_mysql_schema(df, table_is)
 }
 \arguments{
 \item{infile}{Path to the input file}

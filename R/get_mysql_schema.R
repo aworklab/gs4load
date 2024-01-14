@@ -53,6 +53,10 @@ get_mysql_schema = function(df, table_is){
       mutate(size = sprintf('varchar(%s)', size)) %>%
       select(col = name, flag = size) -> col_chr
 
+  } else {
+
+    col_chr = tibble(col = NA_character_, flag = NA_character_)
+
   } # if 문 종료
 
 

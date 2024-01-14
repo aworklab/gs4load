@@ -84,7 +84,7 @@ list_tbl %>%
 tbl_prefix %>%
   mutate(tbl = map(prefix,
                    ~{
-                     .x = xx$prefix[[1]]
+                     # .x = xx$prefix[[1]]
 
                      con_q = get_con(.x,'sql')
                      list_tbl = dbListTables(con_q)
@@ -96,41 +96,56 @@ list_tbl = list_tbl %>% unnest(tbl)
 
 # ** Import from mysql ----------------------------------------------------
 
-list_tbl %>%
-  mutate(fit = map2(prefix, tbl,
-                    ~{
-                      i = 1
-                      .x = list_tbl$prefix[[i]]
-                      .y = list_tbl$tbl[[i]]
+list_tbl %>% filter(prefix != 'bk_common') -> work_tbl
+# list_tbl %>% filter(prefix == 'bk_game') -> work_tbl
+# member_shard_info
+# `bk_game`.`chapter_clear_rec`
 
-                      .x
-                      .y
+i = 2
 
-                      # DB 정보
-                      temp_info = db_info %>% filter(prefix == .x)
-                      sqlite_name = temp_info$dbname
-                      schema_name = temp_info$t_name
-                      table_name = .y
-                      # Mysql
-                      con_q = get_con(.x, 'sql')
-                      con_my = get_con(.x, 'my')
+for(i in 1:nrow(work_tbl)){
 
-                      query = glue('select * from {table_name}')
-                      temp = dbGetQuery(con_q, query) %>% as_tibble()
-                      temp = str2dt(temp)
-                      temp
-                      names(temp)
-                      str(temp)
-                      dbWriteTable(con_my,
-                                   table_name,
-                                   temp,
-                                   field.types = list(bill_start_date = "DATETIME"),
-                                   overwrite = T, row.names = F)
+  # `bk_common`.`cs_tester`
 
-                      dbDisconnect(con_my)
+  .x = work_tbl$prefix[[i]]
+  .y = work_tbl$tbl[[i]]
 
-                      return(temp)
-                    })) -> list_tbl
+  # DB 정보
+  temp_info = db_info %>% filter(prefix == .x)
+  sqlite_name = temp_info$dbname
+  schema_name = temp_info$t_name
+  table_name = .y
+  create_name = glue('`{.x}`.`{table_name}`')
+  print(create_name)
+  # Con 생성
+  con_q = get_con(.x, 'sql')
+  con_my = get_con(.x, 'my')
+
+  # SQLite
+  query = glue('select * from {table_name}')
+  temp = dbGetQuery(con_q, query) %>% as_tibble()
+
+  temp = str2dt(temp)
+
+  if(nrow(temp) != 0){
+
+    info_create = get_mysql_schema(temp, create_name)
+
+    dbSendQuery(con_my, info_create$query)
+
+    dbWriteTable(con_my,
+                 table_name,
+                 temp,
+                 append = T, row.names = F)
+
+  }
+  # MYsql Create Query 생성
+
+  dbDisconnect(con_my)
+  dbDisconnect(con_q)
+
+}
+
 
 
 

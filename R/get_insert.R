@@ -5,7 +5,7 @@
 #' @param infile Path to the input file
 #' @return A mat
 #' @export
-get_insert = function(df, target_name, key_is){
+get_insert = function(df, target_name){
 
   # 테이블 구조
   list_df_type = do.call(c, lapply(df, function(x) typeof(x))) # DF의 colums 구함

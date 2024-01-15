@@ -13,7 +13,7 @@ get_mysql_schema = function(df, table_is){
 
   tbl_df = tibble(col = names(list_df_type), col_type = list_df_type) # 변환 Schema 구조
 
-  col_chr = get_char_name(df)
+  col_chr = gs4load::get_char_name(df)
 
   # TS
   col_ts = gs4load::get_ts_name(df) # TS 구함

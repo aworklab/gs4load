@@ -7,10 +7,6 @@
 #' @export
 get_insert = function(df, target_name, key_is){
 
-  df = read.csv('clipboard', sep = '\t') %>% as_tibble();df
-  target_name = "wotan_delabs.setup_info"
-  key_is = 'table_name'
-
   # 테이블 구조
   list_df_type = do.call(c, lapply(df, function(x) typeof(x))) # DF의 colums 구함
   tbl_df = tibble::tibble(col = names(list_df_type), col_type = list_df_type) # 변환 Schema 구조

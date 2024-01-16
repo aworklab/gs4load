@@ -100,3 +100,7 @@ make_schema = function(type_is = 's3', table_is){
 
 }
 
+
+df = gs_loader('s3_url','META')
+df %>% select(table_name) %>%
+  mutate(query = map2(table_name, 's3', create_schema))

@@ -71,11 +71,16 @@ make_schema = function(type_is = 's3', table_is){
   type_is = 's3'
   table_is = 'log_login'
 
+
   # 작업 정보
-  work_s3 = gs_loader('s3_url','META')
-  work_rs = gs_loader('redshift','META')
-  work_col = gs_loader('column_str','META')
-    = gs_loader('create', 'META') %>% filter(str_detect(type_is, type_is))
+  work_s3 = gs_loader('s3_url','META') %>% filter(table_name == table_is)
+  work_rs = gs_loader('redshift','META')  %>% filter(table_name == table_is)
+  work_col = gs_loader('column_str','META')  %>% filter(table_name == table_is)
+  work_create  = gs_loader('create', 'META') %>% filter(action == type_is)
+
+  # 테이블 정보
+  table_name = table_is
+  s3_url = work_s3$s3_path
 
   # Columns 정보 생성
   work_col %>%
@@ -87,8 +92,11 @@ make_schema = function(type_is = 's3', table_is){
                           ~{
                             sprintf("`%s` %s\n", .x, .y)
                           })) %>%
-    pull(fit) %>% paste0(collapse = ', ')
+    pull(fit) %>% paste0(collapse = ', ') -> columns_are
 
+  query_create = glue(work_create$query_is)
+
+  return(query_create)
 
 }
 

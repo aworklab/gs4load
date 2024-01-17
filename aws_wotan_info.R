@@ -1,6 +1,7 @@
 # remotes::install_github('aworklab/gs4load', upgrade = c('never'), force = T)
 pacman::p_load(gs4load)
 get_lib()
+type_is = 'rs';table_is = 'log_login'
 
 # 스키마 코드 읽기  --------------------------------------------------------------
 
@@ -153,5 +154,15 @@ create_schema('rs','log_login')
 create_schema('add_part','log_login')
 create_schema('drop_part','log_login')
 create_schema('select_part','log_login')
+create_schema('cdc_select','log_login')
+
+df %>% select(table_name)
 
 
+
+# gmailr ------------------------------------------------------------------
+
+# install.packages('gmailr')
+# library(gmailr)
+# gmailr::gm_auth(path = keyring::key_get('gs4'))
+# gm_auth_configure(path = keyring::key_get('gs4'))

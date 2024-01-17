@@ -5,7 +5,7 @@
 #' @param infile Path to the input file
 #' @return A mat
 #' @export
-make_schema = function(type_is = 's3', table_is){
+create_schema = function(type_is = 's3', table_is){
 
   # 작업 정보
   loading_sheet = tibble(

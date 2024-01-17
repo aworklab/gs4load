@@ -84,12 +84,12 @@ create_schema = function(type_is = 's3', table_is){
       ) %>%
       mutate(num = row_number(), .before = col_name) %>%
       mutate(col = case_when(
-        col_name == 'division_date' ~ '\tDATE(DATE_ADD(reg_date, INTERVAL {info.time_difference} hour)) division_date\n',
-        col_name == 'reg_dt' ~ 'DATE_ADD(reg_date, INTERVAL {info.time_difference} hour) reg_dt\n',
-        col_name == 'mig_dt' ~ 'DATE_ADD(now(), INTERVAL {info.time_difference} hour) mig_dt\n',
-        col_name == 'year' ~ 'YEAR(DATE_ADD(reg_date, INTERVAL {info.time_difference} hour)) year\n',
-        col_name == 'month' ~ 'MONTH(DATE_ADD(reg_date, INTERVAL {info.time_difference} hour)) month\n',
-        col_name == 'day' ~ 'DAY(DATE_ADD(reg_date, INTERVAL {info.time_difference} hour)) day',
+        col_name == 'division_date' ~ '\tDATE(DATE_ADD(reg_date, INTERVAL {time_difference} hour)) division_date\n',
+        col_name == 'reg_dt' ~ 'DATE_ADD(reg_date, INTERVAL {time_difference} hour) reg_dt\n',
+        col_name == 'mig_dt' ~ 'DATE_ADD(now(), INTERVAL {time_difference} hour) mig_dt\n',
+        col_name == 'year' ~ 'YEAR(DATE_ADD(reg_date, INTERVAL {time_difference} hour)) year\n',
+        col_name == 'month' ~ 'MONTH(DATE_ADD(reg_date, INTERVAL {time_difference} hour)) month\n',
+        col_name == 'day' ~ 'DAY(DATE_ADD(reg_date, INTERVAL {time_difference} hour)) day',
         T ~ sprintf('%s\n',col_name)
       )) %>% pull(col) %>% paste0(collapse = '\t, ') -> columns_are
 

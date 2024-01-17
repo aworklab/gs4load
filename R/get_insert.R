@@ -42,7 +42,7 @@ get_insert = function(df, target_name){
                                 left_join(col_info, 'col') %>%
                                 select(-flag) %>%
                                 mutate(value = ifelse(col_type %in% c('character','timestamp','date'),
-                                                      sprintf("'%s'",value),
+                                                      sprintf('"%s"',value),
                                                       value
                                                       )) %>%
                                 mutate(keys = sprintf('%s=%s',col, value))-> raw
@@ -64,6 +64,12 @@ get_insert = function(df, target_name){
                             })) %>%
     pull(lines) %>%
     paste0(collapse = '\n') -> query
+
+  # Clipbaord로 붙여 넣기
+  suppressWarnings(
+    write.table(query, 'clipboard', sep = '\t', row.names = F, col.names = F, quote = F)
+  )
+  cat(green('√', red(target_name), 'coppied to clipbaord.\n'))
 
   return(query)
 

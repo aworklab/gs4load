@@ -158,7 +158,8 @@ create_schema('cdc_select','log_login')
 
 df %>% select(table_name)
 
-
+oo = gs_loader('s3_url','META')
+get_insert(oo[1, ],'wotan_delabs.info_s3_cdc')
 
 # gmailr ------------------------------------------------------------------
 

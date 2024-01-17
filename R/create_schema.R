@@ -37,19 +37,34 @@ create_schema = function(type_is = 's3', table_is){
   table_name = table_is
   s3_url = target_s3$s3_path
 
-  # Columns 정보 생성
-  target_col %>%
-    filter(table_name == table_is) %>%
-    select(col_name, s3_type, rs_type) %>%
-    pivot_longer(2:ncol(.), names_to = 'type', values_to = 'col_type') %>%
-    filter(str_detect(type, type_is)) %>%
-    mutate(fit = map2_chr(col_name, col_type,
-                          ~{
-                            sprintf("`%s` %s\n", .x, .y)
-                          })) %>%
-    pull(fit) %>% paste0(collapse = ', ') -> columns_are
+  # 테이블 생성 일 경우
 
-  # 테이블 생성 쿼리
+  if(type_is %in% c('s3','rs')){
+
+    # Columns 정보 생성
+    target_col %>%
+      filter(table_name == table_is) %>%
+      select(col_name, s3_type, rs_type) %>%
+      pivot_longer(2:ncol(.), names_to = 'type', values_to = 'col_type') %>%
+      filter(str_detect(type, type_is)) %>%
+      mutate(fit = map2_chr(col_name, col_type,
+                            ~{
+                              sprintf("`%s` %s\n", .x, .y)
+                            })) %>%
+      pull(fit) %>% paste0(collapse = ', ') -> columns_are
+
+  } else if(type_is %in% c('add_part','drop_part')) {
+
+    year = year(today())
+    month = month(today())
+
+
+  } else if(type_is %in% c('select_part')) {
+
+
+  }
+
+  # 쿼리 생성
   query_create = glue(target_create$query_is)
 
   return(query_create)

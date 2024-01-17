@@ -1,4 +1,4 @@
-remotes::install_github('aworklab/gs4load', upgrade = c('never'), force = T)
+# remotes::install_github('aworklab/gs4load', upgrade = c('never'), force = T)
 pacman::p_load(gs4load)
 get_lib()
 
@@ -67,7 +67,7 @@ rs()
 
 # create schema 생성기  ------------------------------------------------------
 
-make_schema = function(type_is = 's3', table_is){
+create_schema = function(type_is = 's3', table_is){
 
   type_is = 's3'
   table_is = 'log_login'
@@ -78,7 +78,6 @@ make_schema = function(type_is = 's3', table_is){
     assign_is = c('work_s3','work_rs','work_col','work_create')
   )
 
-  i = 1
 
   for(i in 1:nrow(loading_sheet)){
 
@@ -125,4 +124,14 @@ make_schema = function(type_is = 's3', table_is){
 
 df = gs_loader('s3_url','META')
 df %>% select(table_name) %>%
-  mutate(query = map2(table_name, 's3', create_schema))
+  mutate(type_is = 's3') %>%
+  mutate(query = map2_chr(type_is,table_name,
+                      ~{create_schema(.x,.y)})) -> ox
+
+create_schema('s3','log_login')
+create_schema('rs','log_login')
+create_schema('add_part','log_login')
+create_schema('drop_part','log_login')
+create_schema('select_part','log_login')
+
+cat(ox$query[[2]])

@@ -80,7 +80,7 @@ create_schema = function(type_is = 's3', table_is){
   suppressWarnings(
     write.table(query_create, 'clipboard', sep = '\t', row.names = F, col.names = F, quote = F)
   )
-  cat(green('√', red(rs_name), 'coppied to clipbaord.\n'))
+  cat(green('√', blue(type_is),red(table_is), 'coppied to clipbaord.\n'))
 
 
   return(query_create)

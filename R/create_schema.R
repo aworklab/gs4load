@@ -13,11 +13,20 @@ create_schema = function(type_is = 's3', table_is){
     assign_is = c('work_s3','work_rs','work_col','work_create')
   )
 
+  # code_gs Env 생성 확인
+
+  if(!('code_gs' %in% ls(envir = .GlobalEnv))){
+
+    assign('code_gs', new.env(), envir = .GlobalEnv)
+
+  }
+
   # code_gs에 존재 하지 않을 때만 작업값을 불러옴
 
   for(i in 1:nrow(loading_sheet)){
 
     load_info = loading_sheet[i, ]
+
 
     if(sum(ls(code_gs) == load_info$assign_is) == 0){
 

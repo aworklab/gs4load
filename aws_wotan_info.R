@@ -2,16 +2,15 @@
 pacman::p_load(gs4load)
 get_lib()
 
+# 스키마 코드 읽기  --------------------------------------------------------------
+
 df = read.csv('clipboard', sep = '\t') %>% as_tibble()
 
 info_s3 = get_insert(df,'`wotan_delabs`.`info_s3_cdc`')
 info_wotan = get_insert(df,'`wotan_delabs`.`info_wotan_delabs`')
 
-
 info_s3
 info_wotan
-
-
 
 # scrapper  ---------------------------------------------------------------
 

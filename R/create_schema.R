@@ -76,6 +76,13 @@ create_schema = function(type_is = 's3', table_is){
   # 쿼리 생성
   query_create = glue(target_create$query_is)
 
+  # Clipbaord로 붙여 넣기
+  suppressWarnings(
+    write.table(query_create, 'clipboard', sep = '\t', row.names = F, col.names = F, quote = F)
+  )
+  cat(green('√', red(rs_name), 'coppied to clipbaord.\n'))
+
+
   return(query_create)
 
 }

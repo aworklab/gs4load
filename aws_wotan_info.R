@@ -1,7 +1,7 @@
 # remotes::install_github('aworklab/gs4load', upgrade = c('never'), force = T)
 pacman::p_load(gs4load)
 get_lib()
-type_is = 'rs';table_is = 'log_login'
+type_is = 'cdc_select';table_is = 'log_star'
 
 # 스키마 코드 읽기  --------------------------------------------------------------
 
@@ -145,21 +145,30 @@ create_schema = function(type_is = 's3', table_is){
 
 df = gs_loader('s3_url','META')
 df %>% select(table_name) %>%
-  mutate(type_is = 's3') %>%
+  mutate(type_is = 'cdc_select') %>%
   mutate(query = map2_chr(type_is,table_name,
                       ~{create_schema(.x,.y)})) -> ox
 
-create_schema('s3','log_login')
+ox %>% select(query) -> oox
+
+
+
 create_schema('rs','log_login')
 create_schema('add_part','log_login')
 create_schema('drop_part','log_login')
-create_schema('select_part','log_login')
-create_schema('cdc_select','log_login')
+create_schema('select_part','log_star')
+
+create_schema('cdc_select','log_star')
+create_schema('s3','log_star')
 
 df %>% select(table_name)
 
 oo = gs_loader('s3_url','META')
-get_insert(oo[1, ],'wotan_delabs.info_s3_cdc')
+o2 = oo %>% filter(is_active == 1)
+
+get_wotan_insert(o2,'wotan_delabs.info_s3_cdc')
+
+df = o2;target_name = 'wotan_delabs.info_s3_cdc'
 
 # gmailr ------------------------------------------------------------------
 

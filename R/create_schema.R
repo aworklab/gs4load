@@ -49,7 +49,7 @@ create_schema = function(type_is = 's3', table_is){
 
   # 테이블 생성 일 경우
 
-  if(type_is %in% c('s3','rs')){
+  if(type_is %in% c('s3')){
 
     # Columns 정보 생성
     target_col %>%
@@ -64,6 +64,22 @@ create_schema = function(type_is = 's3', table_is){
         T ~ sprintf("`%s` %s\n", col_name, col_type)
       )) %>%
       pull(fit) %>% paste0(collapse = '\t, ') -> columns_are
+
+  } else if(type_is %in% c('rs')){
+
+    target_col %>%
+      filter(table_name == table_is) %>%
+      select(col_name, s3_type, rs_type) %>%
+      pivot_longer(2:ncol(.), names_to = 'type', values_to = 'col_type') %>%
+      filter(str_detect(type, type_is)) %>%
+      mutate(num = row_number(),.before = col_name) %>%
+      mutate(fit = case_when(
+        num == 1 ~ sprintf("\t%s %s\n", col_name, col_type),
+        num == max(num) ~ sprintf("%s %s", col_name, col_type),
+        T ~ sprintf("%s %s\n", col_name, col_type)
+      )) %>%
+      pull(fit) %>% paste0(collapse = '\t, ') -> columns_are
+
 
   } else if(type_is %in% c('add_part','drop_part')) {
 

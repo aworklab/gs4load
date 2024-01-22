@@ -80,6 +80,8 @@ create_schema = function(type_is = 's3', table_is){
       )) %>%
       pull(fit) %>% paste0(collapse = '\t, ') -> columns_are
 
+    table_name = sprintf('spd_%s', table_name)
+
 
   } else if(type_is %in% c('add_part','drop_part')) {
 

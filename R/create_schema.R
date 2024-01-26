@@ -46,6 +46,7 @@ create_schema = function(type_is = 's3', table_is){
   # 테이블 정보
   table_name = table_is
   s3_url = target_s3$s3_path
+  ts_limit = target_s3$ts_limit
 
   # 테이블 생성 일 경우
 
@@ -102,13 +103,13 @@ create_schema = function(type_is = 's3', table_is){
       ) %>%
       mutate(num = row_number(), .before = col_name) %>%
       mutate(col = case_when(
-        col_name == 'division_date' ~ '\tDATE(DATE_ADD(reg_date, INTERVAL {time_difference} hour)) division_date\n',
-        col_name == 'reg_dt_utc' ~ 'reg_date reg_dt_utc\n',
-        col_name == 'reg_dt' ~ 'DATE_ADD(reg_date, INTERVAL {time_difference} hour) reg_dt\n',
-        col_name == 'mig_dt' ~ 'DATE_ADD(now(), INTERVAL {time_difference} hour) mig_dt\n',
-        col_name == 'year' ~ 'YEAR(DATE_ADD(reg_date, INTERVAL {time_difference} hour)) year\n',
-        col_name == 'month' ~ 'MONTH(DATE_ADD(reg_date, INTERVAL {time_difference} hour)) month\n',
-        col_name == 'day' ~ 'DAY(DATE_ADD(reg_date, INTERVAL {time_difference} hour)) day',
+        col_name == 'division_date' ~ glue('\tDATE(DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour)) division_date\n', .open = '<<',.close = '>>'),
+        col_name == 'reg_dt_utc' ~ glue('<<ts_limit>> reg_dt_utc\n', .open = '<<',.close = '>>'),
+        col_name == 'reg_dt' ~ glue('DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour) reg_dt\n', .open = '<<',.close = '>>'),
+        col_name == 'mig_dt' ~ glue('DATE_ADD(now(), INTERVAL {time_difference} hour) mig_dt\n', .open = '<<',.close = '>>'),
+        col_name == 'year' ~ glue('YEAR(DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour)) year\n', .open = '<<',.close = '>>'),
+        col_name == 'month' ~ glue('MONTH(DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour)) month\n', .open = '<<',.close = '>>'),
+        col_name == 'day' ~ glue('DAY(DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour)) day', .open = '<<',.close = '>>'),
         T ~ sprintf('%s\n',col_name)
       )) %>% pull(col) %>% paste0(collapse = '\t, ') -> columns_are
 

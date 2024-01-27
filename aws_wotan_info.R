@@ -2,7 +2,7 @@
 pacman::p_load(gs4load)
 get_lib()
 type_is = 'cdc_select';table_is = 'rrs_user'
-
+type_is = 'rs';table_is = 'rrs_user'
 # 스키마 코드 읽기  --------------------------------------------------------------
 
 create_schema('cdc_select','account')

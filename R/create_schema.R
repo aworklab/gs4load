@@ -55,9 +55,7 @@ create_schema = function(type_is = 's3', table_is){
     # Columns 정보 생성
     target_col %>%
       filter(table_name == table_is) %>%
-      select(col_name, s3_type, rs_type) %>%
-      pivot_longer(2:ncol(.), names_to = 'type', values_to = 'col_type') %>%
-      filter(str_detect(type, type_is)) %>%
+      select(col_name, col_type = s3_type) %>%
       mutate(num = row_number(),.before = col_name) %>%
       mutate(fit = case_when(
         num == 1 ~ sprintf("\t`%s` %s", col_name, col_type),
@@ -70,9 +68,7 @@ create_schema = function(type_is = 's3', table_is){
 
     target_col %>%
       filter(table_name == table_is) %>%
-      select(col_name, s3_type, rs_type) %>%
-      pivot_longer(2:ncol(.), names_to = 'type', values_to = 'col_type') %>%
-      filter(str_detect(type, type_is)) %>%
+      select(col_name, col_type = rs_type) %>%
       mutate(num = row_number(),.before = col_name) %>%
       mutate(fit = case_when(
         num == 1 ~ sprintf("\t%s %s", col_name, col_type),

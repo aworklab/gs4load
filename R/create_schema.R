@@ -60,11 +60,11 @@ create_schema = function(type_is = 's3', table_is){
       filter(str_detect(type, type_is)) %>%
       mutate(num = row_number(),.before = col_name) %>%
       mutate(fit = case_when(
-        num == 1 ~ sprintf("\t`%s` %s\n", col_name, col_type),
+        num == 1 ~ sprintf("\t`%s` %s", col_name, col_type),
         num == max(num) ~ sprintf("`%s` %s", col_name, col_type),
-        T ~ sprintf("`%s` %s\n", col_name, col_type)
+        T ~ sprintf("`%s` %s", col_name, col_type)
       )) %>%
-      pull(fit) %>% paste0(collapse = '\t, ') -> columns_are
+      pull(fit) %>% paste0(collapse = '\n\t, ') -> columns_are
 
   } else if(type_is %in% c('rs')){
 
@@ -75,11 +75,11 @@ create_schema = function(type_is = 's3', table_is){
       filter(str_detect(type, type_is)) %>%
       mutate(num = row_number(),.before = col_name) %>%
       mutate(fit = case_when(
-        num == 1 ~ sprintf("\t%s %s\n", col_name, col_type),
+        num == 1 ~ sprintf("\t%s %s", col_name, col_type),
         num == max(num) ~ sprintf("%s %s", col_name, col_type),
-        T ~ sprintf("%s %s\n", col_name, col_type)
+        T ~ sprintf("%s %s", col_name, col_type)
       )) %>%
-      pull(fit) %>% paste0(collapse = '\t, ') -> columns_are
+      pull(fit) %>% paste0(collapse = '\n\t, ') -> columns_are
 
     table_name = sprintf('spd_%s', table_name)
 
@@ -103,15 +103,15 @@ create_schema = function(type_is = 's3', table_is){
       ) %>%
       mutate(num = row_number(), .before = col_name) %>%
       mutate(col = case_when(
-        col_name == 'division_date' ~ glue('\tDATE(DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour)) division_date\n', .open = '<<',.close = '>>'),
-        col_name == 'reg_dt_utc' ~ glue('<<ts_limit>> reg_dt_utc\n', .open = '<<',.close = '>>'),
-        col_name == 'reg_dt' ~ glue('DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour) reg_dt\n', .open = '<<',.close = '>>'),
-        col_name == 'mig_dt' ~ glue('DATE_ADD(now(), INTERVAL {time_difference} hour) mig_dt\n', .open = '<<',.close = '>>'),
-        col_name == 'year' ~ glue('YEAR(DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour)) year\n', .open = '<<',.close = '>>'),
-        col_name == 'month' ~ glue('MONTH(DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour)) month\n', .open = '<<',.close = '>>'),
+        col_name == 'division_date' ~ glue('\tDATE(DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour)) division_date', .open = '<<',.close = '>>'),
+        col_name == 'reg_dt_utc' ~ glue('<<ts_limit>> reg_dt_utc', .open = '<<',.close = '>>'),
+        col_name == 'reg_dt' ~ glue('DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour) reg_dt', .open = '<<',.close = '>>'),
+        col_name == 'mig_dt' ~ glue('DATE_ADD(now(), INTERVAL {time_difference} hour) mig_dt', .open = '<<',.close = '>>'),
+        col_name == 'year' ~ glue('YEAR(DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour)) year', .open = '<<',.close = '>>'),
+        col_name == 'month' ~ glue('MONTH(DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour)) month', .open = '<<',.close = '>>'),
         col_name == 'day' ~ glue('DAY(DATE_ADD(<<ts_limit>>, INTERVAL {time_difference} hour)) day', .open = '<<',.close = '>>'),
-        T ~ sprintf('%s\n',col_name)
-      )) %>% pull(col) %>% paste0(collapse = '\t, ') -> columns_are
+        T ~ sprintf('%s',col_name)
+      )) %>% pull(col) %>% paste0(collapse = '\n\t, ') -> columns_are
 
     ts_limit_is = target_s3$ts_limit
 

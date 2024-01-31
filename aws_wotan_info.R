@@ -5,7 +5,10 @@ type_is = 'cdc_select';table_is = 'rrs_user'
 type_is = 'rs';table_is = 'rrs_user'
 # 스키마 코드 읽기  --------------------------------------------------------------
 
-create_schema('cdc_select','account')
+table_is = 'account'
+create_schema('s3',table_is)
+create_schema('cdc_select',table_is)
+create_schema('rs',table_is)
 
 create_schema('rs','log_login')
 create_schema('add_part','log_login')

@@ -24,7 +24,6 @@ report_gold = function(){
 
   cat(crayon::green('√'),crayon::bold('Text'),'is read from clipboard\n')
 
-
   # 데이터 세트 수 확인
 
   temp %>%
@@ -77,13 +76,17 @@ report_gold = function(){
                         raw_id %>%
                           mutate(txt = str_remove_all(txt, '\t|\n|GroupID\\: ')) %>%
                           mutate(txt = str_replace_all(txt, '\\/|\\=\\>', '-')) %>%
-                          separate(txt, letters[1:4], sep= ' \\- ') %>%
+                          mutate(txt = str_replace_all(txt, '\\d{1,}회', '')) %>%
+                          mutate(txt = str_replace_all(txt, ' - - | -  - | - -| -  -| - ','-')) %>%
+                          # separate(txt, letters[1:4], sep= ' \\- ') %>%
+                          separate(txt, letters[1:3], sep= '\\-') %>%
                           mutate(product_type = case_when(
                             str_detect(b, '골드') ~ 'gold',
                             T ~ 'coin'
                           )) %>%
-                          mutate(product_price = parse_number(b)) %>%
-                          select(product_type, product_id = d,
+                          mutate(product_price = parse_number(b),
+                                 product_id = parse_number(c)) %>%
+                          select(product_type, product_id,
                                  product_name = a, product_price) %>%
                           mutate(date_report = str_remove_all(range_date[.y], '-'),
                                  date_start = raw_period$date_start,
@@ -118,12 +121,5 @@ report_gold = function(){
   return(temp3)
 
 }
-
-
-
-
-
-
-
 
 

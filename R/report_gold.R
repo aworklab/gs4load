@@ -43,7 +43,7 @@ report_gold = function(){
   temp2 %>% group_nest(flag) %>%
     mutate(fit = map2(data, flag,
                       ~{
-                        # i =1
+                        # i =2
                         # .x = xx$data[[i]]
                         # .y = xx$flag[[i]]
 
@@ -74,9 +74,9 @@ report_gold = function(){
 
                         # 프로덕트 정보
                         raw_id %>%
-                          mutate(txt = str_remove_all(txt, '\t|\n|GroupID\\: ')) %>%
-                          mutate(txt = str_replace_all(txt, '\\/|\\=\\>', '-')) %>%
-                          mutate(txt = str_replace_all(txt, '\\d{1,}회', '')) %>%
+                          mutate(txt = str_remove_all(txt, '\t|\n|GroupID\\s*\\: ')) %>%
+                          mutate(txt = str_replace_all(txt, '\\/|\\=\\>\\s*', '-')) %>%
+                          mutate(txt = str_replace_all(txt, '\\d{1,}회\\s*', '')) %>%
                           mutate(txt = str_replace_all(txt, ' - - | -  - | - -| -  -| - ','-')) %>%
                           # separate(txt, letters[1:4], sep= ' \\- ') %>%
                           separate(txt, letters[1:3], sep= '\\-') %>%
@@ -121,5 +121,12 @@ report_gold = function(){
   return(temp3)
 
 }
+
+
+
+
+
+
+
 
 
